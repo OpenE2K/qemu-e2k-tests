@@ -1,0 +1,269 @@
+#ifndef SRC_BASE_COMMON_H
+#define SRC_BASE_COMMON_H
+
+#define NR_exit      1
+#define NR_write     4
+
+#define SCRATCH_REG0 %g23
+#define SCRATCH_REG1 %g22
+#define SCRATCH_REG2 %g21
+#define SCRATCH_REG3 %g20
+#define SCRATCH_REG4 %g29
+#define SCRATCH_REG5 %g18
+#define SCRATCH_REG6 %g17
+#define SCRATCH_REG7 %g16
+
+#define SCRATCH_PREG0 %pred31
+#define SCRATCH_PREG1 %pred30
+#define SCRATCH_PREG2 %pred29
+#define SCRATCH_PREG3 %pred28
+#define SCRATCH_PREG4 %pred27
+#define SCRATCH_PREG5 %pred26
+#define SCRATCH_PREG6 %pred25
+#define SCRATCH_PREG7 %pred24
+#define SCRATCH_PREG8 %pred23
+
+#define str_HELPER(X) #X
+#define str(X) str_HELPER(X)
+
+#define glue_helper(A, B) A ## B
+#define glue(A, B) glue_helper(A, B)
+#define glue3(A, B, C) glue(glue(A, B), C)
+#define glue4(A, B, C, D) glue(glue(A, B), glue(C, D))
+#define local(LABEL) glue3(.L, LABEL, __LINE__)
+
+// Selector for getf{s,d}.
+#define F(O, L, S, B) ((O) | ((L) << 6) | ((S) << 12) | ((B) << 13))
+
+// Selector for insfd.
+#define IF(O, L, S1_HT, S3_HT) ((O) | ((L) << 6) | ((S1_HT) << 13) | ((S3_HT) << 15))
+
+    .macro sys_exit, code=0
+    {
+        setwd wsz=8, nfx=1
+        sdisp %ctpr1, 0x3
+        nop 4
+    }
+    {
+        addd,0 0, NR_exit, %r8
+        addd,1 0, \code, %r9
+        call %ctpr1, wbs=4
+    }
+    .endm
+
+#define exit(code) sys_exit code
+
+    .macro set_exit_code code=0
+        addd,0 0, 1, SCRATCH_REG3; \
+        stb,2 SCRATCH_REG3, [ exit_code ]; \
+    .endm
+
+    .macro sys_write msg, len, fd=1
+    {
+        setwd wsz=8, nfx=1
+        sdisp %ctpr1, 0x3
+        nop 4
+    }
+    {
+        addd,0 0, NR_write, %r8
+        addd,1 0, \fd, %r9
+        addd,2 0, \msg, %r10
+        addd,3 0, \len, %r11
+        call %ctpr1, wbs=4
+    }
+    .endm
+
+#define write(MSG) \
+        .pushsection ".rodata"; \
+    local(str):; \
+        .ascii MSG; \
+    local(len) = . - local(str); \
+        .popsection; \
+        sys_write local(str), local(len)
+
+#define writeln(MSG) write(MSG "\n")
+
+#define assert_(PRED, MSG) \
+            ibranch local(ok) ? PRED; \
+            write("assert at " __FILE__ ":" str(__LINE__) ":\n" \
+                  "assertion `" str(PRED) "` failed" MSG "\n"); \
+            set_exit_code 1; \
+    local(ok):
+
+#define assert(PRED) assert_(PRED, "")
+#define assertm(PRED, MSG) assert_(PRED, ", " MSG)
+
+#define test_cmp_helper_false ~
+#define test_cmp_helper_true
+#define test_cmp_helper(X) glue(test_cmp_helper_, X)
+#define test_cmp(OP, S1, S2, EXPECTED) \
+        { \
+            addd,0 0, S1, SCRATCH_REG0; \
+            addd,1 0, S2, SCRATCH_REG1; \
+        } \
+        { \
+            OP SCRATCH_REG0, SCRATCH_REG1, SCRATCH_PREG0; \
+            nop 2; \
+        } \
+                ibranch local(ok) ? test_cmp_helper(EXPECTED) SCRATCH_PREG0; \
+                write("test_cmp at " __FILE__ ":" str(__LINE__) ":\n" \
+                      "assertion `" str(OP) " " str(S1) ", " str(S2) " == " str(EXPECTED) "` failed\n"); \
+                set_exit_code 1; \
+        local(ok):
+
+#define assert_eq(OP, LEFT, RIGHT, MSG) \
+        { \
+            OP LEFT, RIGHT, SCRATCH_PREG0; \
+            nop 2; \
+        } \
+            ibranch local(ok) ? SCRATCH_PREG0; \
+            write("assert_eq at " __FILE__ ":" str(__LINE__) ":\n" \
+                  "assertion `left == right` failed" MSG "\n" \
+                  "  left: " #LEFT "\n" \
+                  " right: " #RIGHT "\n"); \
+            set_exit_code 1; \
+    local(ok):
+
+#define assert_eq_i32(LEFT, RIGHT) assert_eq(cmpesb, LEFT, RIGHT, "")
+#define assert_eq_i64(LEFT, RIGHT) assert_eq(cmpedb, LEFT, RIGHT, "")
+
+#define assert_eq_i32m(LEFT, RIGHT, MSG) assert_eq(cmpesb, LEFT, RIGHT, ", " MSG)
+#define assert_eq_i64m(LEFT, RIGHT, MSG) assert_eq(cmpedb, LEFT, RIGHT, ", " MSG)
+
+#define assert_ne(OP, LEFT, RIGHT, MSG) \
+        { \
+            nop 2; \
+            OP LEFT, RIGHT, SCRATCH_PREG0; \
+        } \
+            ibranch local(ok) ? ~SCRATCH_PREG0; \
+            write("assert_ne at " __FILE__ ":" str(__LINE__) ":\n" \
+                  "assertion `left != right` failed, " MSG "\n" \
+                  "  left: " #LEFT "\n" \
+                  " right: " #RIGHT "\n"); \
+            set_exit_code 1; \
+    local(ok):
+
+#define assert_ne_i32(LEFT, RIGHT, MSG) assert_ne(cmpesb, LEFT, RIGHT, MSG)
+#define assert_ne_i64(LEFT, RIGHT, MSG) assert_ne(cmpedb, LEFT, RIGHT, MSG)
+
+#define test_helper(OP, CMP, S1, S2, EXPECTED) \
+        { \
+            addd,0 0, S1, SCRATCH_REG1; \
+            addd,1 0, S2, SCRATCH_REG2; \
+        } \
+            OP SCRATCH_REG1, SCRATCH_REG2, SCRATCH_REG0; \
+        { \
+            nop 2; \
+            CMP SCRATCH_REG0, EXPECTED, SCRATCH_PREG0; \
+        } \
+            ibranch local(ok) ? SCRATCH_PREG0; \
+            write("test at " __FILE__ ":" str(__LINE__) ":\n" \
+                  "assertion `" str(OP) " " str(S1) ", " str(S2) " == " str(EXPECTED) "` failed\n"); \
+            set_exit_code 1; \
+    local(ok):
+
+#define test_i32(OP, S1, S2, EXPECTED) test_helper(OP, cmpesb, S1, S2, EXPECTED)
+#define test_i64(OP, S1, S2, EXPECTED) test_helper(OP, cmpedb, S1, S2, EXPECTED)
+
+    .macro skip_test
+        exit(77)
+    .endm
+
+#define MDL_E4S         3   /* Elbrus-4S  */
+#define MDL_E2S         4   /* Elbrus-2S+ */
+#define MDL_E2SM        6   /* Elbrus-2SM */
+#define MDL_E8S         7   /* Elbrus-8S  */
+#define MDL_E1SP        8   /* Elbrus-1S+ */
+#define MDL_E8S2        9   /* Elbrus-8S2 */
+#define MDL_E12S        10  /* Elbrus-12S */
+#define MDL_E16S        11  /* Elbrus-16S */
+#define MDL_E2S3        12  /* Elbrus-2S3 */
+
+    .macro isa_version dst
+    {
+        rrd,0 %idr, SCRATCH_REG7
+        addd,1 0, 0xff, \dst
+    }
+    {
+        andd,0 SCRATCH_REG7, 0xff, SCRATCH_REG7
+    }
+    {
+        cmpedb,0 SCRATCH_REG7, MDL_E2S, SCRATCH_PREG0
+        cmpedb,1 SCRATCH_REG7, MDL_E2SM, SCRATCH_PREG1
+        cmpedb,3 SCRATCH_REG7, MDL_E4S, SCRATCH_PREG2
+        cmpedb,4 SCRATCH_REG7, MDL_E8S, SCRATCH_PREG3
+    }
+    {
+        cmpedb,0 SCRATCH_REG7, MDL_E1SP, SCRATCH_PREG4
+        cmpedb,1 SCRATCH_REG7, MDL_E8S2, SCRATCH_PREG5
+        cmpedb,3 SCRATCH_REG7, MDL_E12S, SCRATCH_PREG6
+        cmpedb,4 SCRATCH_REG7, MDL_E16S, SCRATCH_PREG7
+    }
+    {
+        cmpedb,0 SCRATCH_REG7, MDL_E2S3, SCRATCH_PREG8
+    }
+    {
+        addd,0 0, 2, \dst ? SCRATCH_PREG0
+        addd,1 0, 2, \dst ? SCRATCH_PREG1
+        addd,2 0, 3, \dst ? SCRATCH_PREG2
+        addd,3 0, 4, \dst ? SCRATCH_PREG3
+        addd,4 0, 4, \dst ? SCRATCH_PREG4
+        addd,5 0, 5, \dst ? SCRATCH_PREG5
+    }
+    {
+        addd,0 0, 6, \dst ? SCRATCH_PREG6
+        addd,1 0, 6, \dst ? SCRATCH_PREG7
+        addd,2 0, 6, \dst ? SCRATCH_PREG8
+    }
+    .endm
+
+    .macro min_version ver
+        isa_version SCRATCH_REG0
+        cmplsb,0 SCRATCH_REG0, \ver, SCRATCH_PREG0
+        ibranch 0f ? ~SCRATCH_PREG0
+        skip_test
+0:
+    .endm
+
+    .macro max_version ver
+        isa_version SCRATCH_REG0
+        cmplesb,0 SCRATCH_REG0, \ver, SCRATCH_PREG0
+        ibranch 0f ? SCRATCH_PREG0
+        skip_test
+0:
+    .endm
+
+#define LSR_LCNT(X)         ((X) & 0xffffffff)
+#define LSR_ECNT(X)         (((X) & 0x1f) << 32)
+#define LSR_VLC             (1 << 37)
+#define LSR_OVERFLOW        (1 << 38)
+#define LSR_LDMC            (1 << 39)
+#define LSR_LDOVL(X)        (((X) & 0x7f) << 40)
+#define LSR_PCNT(X)         (((X) & 0x1f) << 48)
+#define LSR_STRRM(X)        (((X) & 0x7f) << 53)
+#define LSR_SEMC            (1 << 60)
+
+#define LSR_LCNT_F          F(0, 32, 0, 0)
+#define LSR_ECNT_F          F(32, 5, 0, 0)
+#define LSR_VLC_F           F(37, 1, 0, 0)
+#define LSR_OVERFLOW_F      F(38, 1, 0, 0)
+#define LSR_LDMC_F          F(39, 1, 0, 0)
+#define LSR_LDOVL_F         F(40, 8, 0, 0)
+#define LSR_PCNT_F          F(48, 5, 0, 0)
+#define LSR_STRRM_F         F(53, 7, 0, 0)
+#define LSR_SEMC_F          F(60, 1, 0, 0)
+
+    .macro invalid32 dst
+        udivs,5,sm 0, 0, \dst
+    .endm
+
+    .macro invalid64 dst
+        udivd,5,sm 0, 0, \dst
+    .endm
+
+    .macro invalid_preg dst, scratch=SCRATCH_REG3
+        invalid64 \scratch
+        cmpedb,0 0, \scratch, \dst
+    .endm
+
+#endif // SRC_BASE_COMMON_H
