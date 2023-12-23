@@ -87,6 +87,9 @@ asm_tests = {
     'andp-1': {},
     'landp-1': {},
     'movep-1': {},
+    'cascading-1': {},
+    'cascading-2': {},
+    'clp-arg-1': {},
   },
   'int': {
     'basic-1': {},
