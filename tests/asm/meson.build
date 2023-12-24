@@ -49,6 +49,8 @@ asm_tests = {
     'setwd-2': {},
     'setwd-invalidate-regs-1': {},
     'setwd-invalidate-regs-2': {},
+    'setwd-psize-1': {},
+    'setwd-psize-2': { 'should_fail': true },
     'setbn-invalidate-regs-1': {},
     'setbn-invalidate-regs-2': { 'should_fail': true },
     'setbp-invalidate-regs-1': {},
