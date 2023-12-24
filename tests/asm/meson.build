@@ -102,7 +102,7 @@ asm_tests = {
     'rwd-alc-rrd-1': {},
   },
   'sm': {
-    'dbl-1': {},
+    'dbl-1': { 'c_args': ['-march=elbrus-v3' ]},
     'gettagd-1': {},
     'gettagd-2': { 'should_fail': true },
     'insfd-1': {},
