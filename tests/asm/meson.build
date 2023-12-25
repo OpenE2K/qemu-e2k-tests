@@ -44,6 +44,8 @@ asm_tests = {
     'exit-1': { 'should_fail': true },
     'template': {},
     'signal-1': {},
+    'excp-1': {},
+    'excp-2': {},
   },
   'win': {
     'setwd-1': {},
