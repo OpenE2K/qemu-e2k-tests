@@ -3,6 +3,8 @@
 
 #define NR_exit      1
 #define NR_write     4
+#define NR_rt_sigaction 174
+#define NR_rt_sigreturn 173
 
 #define SCRATCH_REG0 %g23
 #define SCRATCH_REG1 %g22
@@ -91,6 +93,77 @@
         sys_write local(str), local(len)
 
 #define writeln(MSG) write(MSG "\n")
+
+#define SIGHUP           1
+#define SIGINT           2
+#define SIGQUIT          3
+#define SIGILL           4
+#define SIGTRAP          5
+#define SIGABRT          6
+#define SIGIOT           6
+#define SIGBUS           7
+#define SIGFPE           8
+#define SIGKILL          9
+#define SIGUSR1         10
+#define SIGSEGV         11
+#define SIGUSR2         12
+#define SIGPIPE         13
+#define SIGALRM         14
+#define SIGTERM         15
+#define SIGSTKFLT       16
+#define SIGCHLD         17
+#define SIGCONT         18
+#define SIGSTOP         19
+#define SIGTSTP         20
+#define SIGTTIN         21
+#define SIGTTOU         22
+#define SIGURG          23
+#define SIGXCPU         24
+#define SIGXFSZ         25
+#define SIGVTALRM       26
+#define SIGPROF         27
+#define SIGWINCH        28
+#define SIGIO           29
+#define SIGPWR          30
+#define SIGSYS          31
+#define SIGRTMIN        32
+
+#define SA_SIGINFO       0x00000004
+
+    .macro init_sigaction handler=0, flags=0, restorer=0, mask=0
+        .quad \handler
+        .quad \flags
+        .quad \restorer
+        .quad \mask
+    .endm
+
+    .macro sys_rt_sigaction sig, acc=0, oldacc=0
+    {
+        setwd wsz=8, nfx=1
+        addd,0 0, NR_rt_sigaction, %r8
+        addd,1 0, \sig, %r9
+        sdisp %ctpr1, 0x3
+        nop 4
+    }
+    {
+        addd,0 0, \acc, %r10
+        addd,1 0, \oldacc, %r11
+        addd,2 0, 8, %r12
+        call %ctpr1, wbs=4
+    }
+    .endm
+
+    .macro sys_rt_sigreturn
+        {
+            setwd wsz=8, nfx=1
+            sdisp %ctpr1, 0x3
+        }
+        {
+            addd,0 0, NR_rt_sigreturn, %r8
+            addd,1 0, 0, %r9
+            call %ctpr1, wbs=4
+        }
+    .endm
 
 #define assert_(PRED, MSG) \
             ibranch local(ok) ? PRED; \
