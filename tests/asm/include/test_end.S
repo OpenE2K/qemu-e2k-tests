@@ -1,8 +1,7 @@
 #ifndef SRC_BASE_TEST_END_H
 #define SRC_BASE_TEST_END_H
 
-        ldb,0 [ exit_code ], SCRATCH_REG3
-        exit(SCRATCH_REG3)
+        exit_with_code
     .size _start, . - _start
 
     .pushsection ".data"

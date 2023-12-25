@@ -54,7 +54,7 @@
 #define exit(code) sys_exit code
 
     .macro set_exit_code code=0
-        addd,0 0, 1, SCRATCH_REG3; \
+        addd,0 0, \code, SCRATCH_REG3; \
         stb,2 SCRATCH_REG3, [ exit_code ]; \
     .endm
 
@@ -71,6 +71,15 @@
         addd,3 0, \len, %r11
         call %ctpr1, wbs=4
     }
+    .endm
+
+    .macro exit_with_code
+        ldb,0 [ exit_code ], SCRATCH_REG3
+        sys_exit SCRATCH_REG3
+    .endm
+
+    .macro skip_test
+        sys_exit 77
     .endm
 
 #define write(MSG) \
@@ -164,10 +173,6 @@
 
 #define test_i32(OP, S1, S2, EXPECTED) test_helper(OP, cmpesb, S1, S2, EXPECTED)
 #define test_i64(OP, S1, S2, EXPECTED) test_helper(OP, cmpedb, S1, S2, EXPECTED)
-
-    .macro skip_test
-        exit(77)
-    .endm
 
 #define MDL_E4S         3   /* Elbrus-4S  */
 #define MDL_E2S         4   /* Elbrus-2S+ */
