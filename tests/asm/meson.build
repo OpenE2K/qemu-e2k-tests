@@ -164,6 +164,14 @@ asm_tests = {
     'dam-1': {},
     'dam-2': {},
   },
+  'syscall': {
+    'get-ps-size-1': {},
+    'get-pcs-size-1': {},
+    'get-pcs-offset-1': {},
+    'read-ps-ex-1': {},
+    'read-ps-ex-unaligned-1': { 'should_fail': true },
+    'write-ps-ex-1': {},
+  },
 }
 
 foreach suite, tests : asm_tests

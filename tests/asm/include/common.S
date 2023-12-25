@@ -5,6 +5,7 @@
 #define NR_write     4
 #define NR_rt_sigaction 174
 #define NR_rt_sigreturn 173
+#define NR_access_hw_stacks 254
 
 #define SCRATCH_REG0 %g23
 #define SCRATCH_REG1 %g22
@@ -165,6 +166,38 @@
         }
     .endm
 
+#define READ_CHAIN_STACK            0
+#define READ_PROCEDURE_STACK        1
+#define WRITE_PROCEDURE_STACK       2
+#define GET_CHAIN_STACK_OFFSET      3
+#define GET_CHAIN_STACK_SIZE        4
+#define GET_PROCEDURE_STACK_SIZE    5
+#define READ_CHAIN_STACK_EX         6
+#define READ_PROCEDURE_STACK_EX     7
+#define WRITE_PROCEDURE_STACK_EX    8
+#define WRITE_CHAIN_STACK_EX        9
+
+    .macro sys_access_hw_stacks mode, frame_addr=0, buf_addr=0, buf_size=0, size_addr=0
+    {
+        setwd wsz=8, nfx=1
+        sdisp %ctpr1, 0x3
+    }
+    {
+        addd,0 0, NR_access_hw_stacks, %r8
+        addd,1 0, \mode, %r9
+    }
+    {
+        nop 2
+        addd,0 0, \frame_addr, %r10
+        addd,1 0, \buf_addr, %r11
+    }
+    {
+        addd,0 0, \buf_size, %r12
+        addd,1 0, \size_addr, %r13
+        call %ctpr1, wbs=4
+    }
+    .endm
+
 #define assert_(PRED, MSG) \
             ibranch local(ok) ? PRED; \
             write("assert at " __FILE__ ":" str(__LINE__) ":\n" \
@@ -225,8 +258,11 @@
             set_exit_code 1; \
     local(ok):
 
-#define assert_ne_i32(LEFT, RIGHT, MSG) assert_ne(cmpesb, LEFT, RIGHT, MSG)
-#define assert_ne_i64(LEFT, RIGHT, MSG) assert_ne(cmpedb, LEFT, RIGHT, MSG)
+#define assert_ne_i32(LEFT, RIGHT) assert_ne(cmpesb, LEFT, RIGHT, "")
+#define assert_ne_i64(LEFT, RIGHT) assert_ne(cmpedb, LEFT, RIGHT, "")
+
+#define assert_ne_i32m(LEFT, RIGHT, MSG) assert_ne(cmpesb, LEFT, RIGHT, MSG)
+#define assert_ne_i64m(LEFT, RIGHT, MSG) assert_ne(cmpedb, LEFT, RIGHT, MSG)
 
 #define test_helper(OP, CMP, S1, S2, EXPECTED) \
         { \
