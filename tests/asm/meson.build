@@ -75,6 +75,7 @@ asm_tests = {
     'ibranch-1': {},
     'ct-1': {},
     'call-1': {},
+    'call-2': { 'should_fail': true },
     'call-invalidate-pregs-1': {},
     'call-invalidate-pregs-2': { 'should_fail': true },
     'call-reset-ctpr-1': { 'should_fail': true },
