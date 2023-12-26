@@ -183,6 +183,7 @@ asm_tests = {
     'read-ps-ex-unaligned-1': { 'should_fail': true },
     'write-ps-ex-1': {},
     'zero-wsz-1': {},
+    'invalid-sdisp-1': { 'should_fail': true },
   },
 }
 
