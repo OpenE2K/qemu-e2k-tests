@@ -46,6 +46,13 @@ asm_tests = {
     'signal-1': {},
     'excp-1': {},
     'excp-2': {},
+    'excp-3': {},
+    'excp-4': {},
+    'excp-5': {},
+    'excp-6': {},
+    'excp-7': {},
+    'excp-8': {},
+    'excp-9': {},
   },
   'win': {
     'setwd-1': {},
