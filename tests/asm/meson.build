@@ -185,6 +185,10 @@ asm_tests = {
     'write-ps-ex-1': {},
     'zero-wsz-1': {},
     'invalid-sdisp-1': { 'should_fail': true },
+    'invalid-nr-1': {},
+    'invalid-nr-hi-1': {},
+    'invalid-arg-1': {},
+    'invalid-arg-hi-1': {},
   },
 }
 
