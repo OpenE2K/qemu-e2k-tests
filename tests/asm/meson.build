@@ -65,7 +65,7 @@ asm_tests = {
     'setbn-invalidate-regs-2': { 'should_fail': true },
     'setbp-invalidate-regs-1': {},
     'setbp-invalidate-regs-2': { 'should_fail': true },
-    'dbl-1': { 'c_args': ['-march=elbrus-v3'] },
+    'dbl-1': {},
     'out-of-bounds-1': { 'should_fail': true },
     'out-of-bounds-2': { 'should_fail': true },
     'out-of-bounds-3': { 'should_fail': true },
@@ -86,7 +86,7 @@ asm_tests = {
     'ret-reset-ctpr-3': { 'should_fail': true },
   },
   'decode': {
-    'ales25-1': { 'c_args': ['-march=elbrus-v4'] },
+    'ales25-1': {},
     'lit-1': {},
     'store-load-group-1': {},
     'store-load-group-2': { 'should_fail': true },
@@ -133,7 +133,7 @@ asm_tests = {
     'rwd-alc-rrd-1': {},
   },
   'sm': {
-    'dbl-1': { 'c_args': ['-march=elbrus-v3' ]},
+    'dbl-1': {},
     'gettagd-1': {},
     'gettagd-2': { 'should_fail': true },
     'insfd-1': {},

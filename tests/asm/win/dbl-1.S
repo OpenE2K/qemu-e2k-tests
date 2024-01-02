@@ -1,7 +1,6 @@
 #include "test_start.S"
 
-        min_version 3
-
+#if __iset__ >= 3
     {
         setwd wsz=4, nfx=1
         subd,0 0, 1, %r0
@@ -37,5 +36,8 @@
         assert_eq_i64(%r0, 0)
         assert_eq_i64(%r1, 0)
         assert_eq_i64(%g16, 0)
+#else
+        skip_test
+#endif
 
 #include "test_end.S"

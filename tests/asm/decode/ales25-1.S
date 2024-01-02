@@ -1,7 +1,6 @@
 #include "test_start.S"
 
-        min_version 4
-
+#if __iset__ >= 4
     {
         setwd wsz=8, nfx=1
         adds,0 0, 0x40000000, %r0 // 2.0f
@@ -29,5 +28,8 @@
         assert_eq_i32(%r7, 0x3FC00000)
         assert_eq_i32(%r8, 0x40000000)
         assert_eq_i32(%r9, 0x40A00000)
+#else
+        skip_test
+#endif
 
 #include "test_end.S"
