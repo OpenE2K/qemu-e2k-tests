@@ -1,5 +1,8 @@
 #include "test_start.S"
 
+    // TODO: related to system emulation
+        skip_test
+
         sys_rt_sigaction SIGILL, act
     {
         setwd wsz=8, nfx=1

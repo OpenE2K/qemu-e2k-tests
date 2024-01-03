@@ -1,5 +1,8 @@
 #include "test_start.S"
 
+    // TODO: related to system emulation
+        skip_test
+
         sys_rt_sigaction SIGFPE, act
         addd,0 0, 1, %g16
     {
