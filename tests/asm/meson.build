@@ -155,6 +155,7 @@ asm_tests = {
     'qual-4': {},
     'qual-call-1': { 'should_fail': true },
     'qual-ct-1': { 'should_fail': true },
+    'qual-ct-2': {},
     'qual-ibranch-1': { 'should_fail': true },
     'std-1': {},
     'udivs-1': { 'should_fail': true },
