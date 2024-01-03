@@ -153,6 +153,7 @@ asm_tests = {
     'qual-2': { 'should_fail': true },
     'qual-3': { 'should_fail': true },
     'qual-4': {},
+    'qual-5': {},
     'qual-call-1': { 'should_fail': true },
     'qual-ct-1': { 'should_fail': true },
     'qual-ct-2': {},
