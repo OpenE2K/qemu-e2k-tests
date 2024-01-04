@@ -190,6 +190,12 @@ asm_tests = {
     'invalid-arg-1': {},
     'invalid-arg-hi-1': {},
   },
+  'f80': {
+    'movif-movfi-1': {},
+    'fxaddxx-1': {},
+    'fxsubxx-1': {},
+    'fxmulxx-1': {},
+  },
 }
 
 foreach suite, tests : asm_tests
