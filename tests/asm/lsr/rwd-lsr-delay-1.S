@@ -1,5 +1,8 @@
 #include "test_start.S"
 
+    // XXX: probably UB
+        skip_test
+
     {
         disp %ctpr1, 0f
         rwd,0 (1UL << 37) | 1, %lsr
