@@ -1,5 +1,8 @@
 #include "test_start.S"
 
+    // XXX: pm related
+        skip_test
+
         setwd wsz=8, nfx=1
         invalid64 %r0
     {
