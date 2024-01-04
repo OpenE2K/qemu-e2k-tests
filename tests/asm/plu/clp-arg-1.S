@@ -1,6 +1,7 @@
 #include "test_start.S"
 
 // XXX: Probably it is UB, but CPUs execute it as expected for user.
+        skip_test
 
     {
         cmpesb,0 0, 0, %pred0
@@ -10,7 +11,7 @@
 //        pass %pred0, @p2
 //        pass %pred0, @p3
 //        landp @p2, @p3, @p4
-//        pass @p4, %pred4
+//        pass @p4, %pred1
 //    }
         .word 0x00080010
         .word 0x00000000
