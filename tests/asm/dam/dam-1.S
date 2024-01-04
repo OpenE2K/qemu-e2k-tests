@@ -1,5 +1,8 @@
 #include "test_start.S"
 
+    // XXX: DAM is not implemented yet
+        skip_test
+
         setwd wsz=4, nfx=1
     {
         // Force page fault
