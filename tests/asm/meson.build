@@ -129,6 +129,8 @@ asm_tests = {
     'cmpd-1': {},
     'rwd-rrd-1': {},
     'rwd-alc-rrd-1': {},
+    'ctpr-write-1': {},
+    'ctpr-write-2': { 'should_fail': true },
   },
   'sm': {
     'dbl-1': {},
