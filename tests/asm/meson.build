@@ -208,6 +208,17 @@ asm_tests = {
     'fxsubxx-1': {},
     'fxmulxx-1': {},
   },
+  'qp': {
+    'stmqp-1': {},
+    'stmqp-unaligned-1': { 'should_fail': true, 'c_args': ['-DMAX_VER=6'] },
+    'stmqp-unaligned-2': { 'should_fail': true, 'c_args': ['-DMAX_VER=6'] },
+    'stmqp-unaligned-3': { 'src': 'stmqp-page-1', 'c_args': ['-DMIN_VER=6'] },
+    'stmqp-unaligned-4': { 'src': 'stmqp-page-2', 'c_args': ['-DMIN_VER=6'] },
+    'stmqp-page-1': { 'should_fail': true, 'c_args': ['-DMAX_VER=6'] },
+    'stmqp-page-2': { 'should_fail': true, 'c_args': ['-DMAX_VER=6'] },
+    'stmqp-page-3': { 'src': 'stmqp-page-1', 'c_args': ['-DMIN_VER=6'] },
+    'stmqp-page-4': { 'src': 'stmqp-page-2', 'c_args': ['-DMIN_VER=6'] },
+  },
 }
 
 foreach suite, tests : asm_tests
