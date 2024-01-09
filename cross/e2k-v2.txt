@@ -1,0 +1,5 @@
+[constants]
+cpu = 'e2c+'
+mcpu = 'elbrus-2c+'
+iset = '2'
+toolchain = '/opt/mcst/lcc/bin.toolchain'

@@ -1,0 +1,4 @@
+[constants]
+cpu = 'e48c'
+mcpu = 'elbrus-48c'
+iset = '7'

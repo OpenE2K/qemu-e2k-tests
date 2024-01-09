@@ -1,0 +1,23 @@
+[constants]
+arch = 'e2k-linux'
+sysroot = '/opt/mcst/fs/e2k-v' + iset
+toolchain = '/opt/mcst/lcc-e2k-v' + iset / 'bin.toolchain'
+common_flags = ['-mtune=' + mcpu, '--sysroot', sysroot]
+
+[built-in options]
+c_args = common_flags
+cpp_args = common_flags
+c_link_args = common_flags
+cpp_link_args = common_flags
+
+[binaries]
+c = toolchain / arch + '-cc'
+cpp = toolchain / arch + '-c++'
+strip = toolchain / arch + '-strip'
+exe_wrapper = ['qemu-e2k', '-cpu', cpu + ',tags=on', '-L', sysroot]
+
+[host_machine]
+system = 'linux'
+cpu_family = 'e2k'
+cpu = cpu
+endian = 'little'
