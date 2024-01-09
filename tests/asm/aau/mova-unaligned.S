@@ -1,5 +1,7 @@
 #include "test_start.S"
 
+#if (defined(MAX_VER) && __iset__ <= MAX_VER) || \
+    (defined(MIN_VER) && __iset__ >= MIN_VER)
     {
         setwd wsz=4, nfx=1
         addd,0 0, arr, %r0
@@ -11,6 +13,9 @@
         nop 7
         OP,0 area=0, ind=0, am=1, be=0, %r0
         addd,0 %r0, 0, %r0
+#else
+        skip_test
+#endif
 
 #include "test_end.S"
 

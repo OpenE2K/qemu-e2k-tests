@@ -1,6 +1,10 @@
 #ifndef SRC_BASE_COMMON_H
 #define SRC_BASE_COMMON_H
 
+#if !defined(__iset__)
+# define __iset__ 1
+#endif
+
 #define NR_exit                   1
 #define NR_write                  4
 #define NR_mmap                  90
