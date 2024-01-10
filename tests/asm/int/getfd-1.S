@@ -66,10 +66,7 @@
         test_i64(getfd, 0xfedcba9876543210, F(32,16, 1, 4), 0xffffffffffffba98)
         test_i64(getfd, 0xfedcba9876543210, F(48,16, 1, 6), 0xfffffffffffffedc)
 
-        isa_version %r0
-        cmpbdb,0 %r0, 5, %pred0
-        ibranch 0f ? %pred0
-
+#if __iset__ >= 5
         // v5+ does not follow older rules for src2[15:13]
         test_i64(getfd, 0x0000000000808080, F( 0,32, 1, 0), 0x0000000000808080)
         test_i64(getfd, 0x0000000000808080, F( 0,32, 1, 1), 0x0000000000808080)
@@ -80,10 +77,7 @@
         test_i64(getfd, 0x0000000000010101, F( 1,32, 1, 1), 0x0000000000008080)
         test_i64(getfd, 0x0000000000010101, F( 1,32, 1, 2), 0x0000000000008080)
         test_i64(getfd, 0x0000000000010101, F( 1,32, 1, 3), 0x0000000000008080)
-
-        ibranch 1f
-
-0:
+#else
         test_i64(getfd, 0x0000000000808080, F( 0,32, 1, 0), 0xffffffff00808080)
         test_i64(getfd, 0x0000000000808080, F( 0,32, 1, 1), 0xffffffff00808080)
         test_i64(getfd, 0x0000000000808080, F( 0,32, 1, 2), 0xffffffff00808080)
@@ -93,6 +87,6 @@
         test_i64(getfd, 0x0000000000010101, F( 1,32, 1, 1), 0xffffffff00008080)
         test_i64(getfd, 0x0000000000010101, F( 1,32, 1, 2), 0xffffffff00008080)
         test_i64(getfd, 0x0000000000010101, F( 1,32, 1, 3), 0x0000000000008080)
-1:
+#endif
 
 #include "test_end.S"
