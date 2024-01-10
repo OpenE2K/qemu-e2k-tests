@@ -1,5 +1,6 @@
 #include "test_start.S"
 
+#if __LCC__ < 120
     {
         setwd wsz=4, nfx=1
         disp %ctpr1, 1f
@@ -13,3 +14,7 @@
 1:
         return %ctpr3
         ct %ctpr3
+#else
+        skip_test
+#include "test_end.S"
+#endif
