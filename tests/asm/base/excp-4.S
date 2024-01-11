@@ -29,8 +29,7 @@
 #include "test_end.S"
 
 sig_handler:
-        isa_version %g16
-        cmpbdb,0 %g16, 5, %pred0
+        cmpbdb,0 __iset__, 5, %pred0
 
         ldd,0 8, psp, %g16
         andd,0 %g16, (1ULL << 32) - 1, %g16

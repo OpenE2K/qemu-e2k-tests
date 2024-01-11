@@ -350,60 +350,6 @@
 #define MDL_E16S        11  /* Elbrus-16S */
 #define MDL_E2S3        12  /* Elbrus-2S3 */
 
-    .macro isa_version dst
-    {
-        rrd,0 %idr, SCRATCH_REG0
-        addd,1 0, 0xff, \dst
-    }
-    {
-        andd,0 SCRATCH_REG0, 0xff, SCRATCH_REG0
-    }
-    {
-        cmpedb,0 SCRATCH_REG0, MDL_E2S, SCRATCH_PREG0
-        cmpedb,1 SCRATCH_REG0, MDL_E2SM, SCRATCH_PREG1
-        cmpedb,3 SCRATCH_REG0, MDL_E4S, SCRATCH_PREG2
-        cmpedb,4 SCRATCH_REG0, MDL_E8S, SCRATCH_PREG3
-    }
-    {
-        cmpedb,0 SCRATCH_REG0, MDL_E1SP, SCRATCH_PREG4
-        cmpedb,1 SCRATCH_REG0, MDL_E8S2, SCRATCH_PREG5
-        cmpedb,3 SCRATCH_REG0, MDL_E12S, SCRATCH_PREG6
-        cmpedb,4 SCRATCH_REG0, MDL_E16S, SCRATCH_PREG7
-    }
-    {
-        cmpedb,0 SCRATCH_REG0, MDL_E2S3, SCRATCH_PREG8
-    }
-    {
-        addd,0 0, 2, \dst ? SCRATCH_PREG0
-        addd,1 0, 2, \dst ? SCRATCH_PREG1
-        addd,2 0, 3, \dst ? SCRATCH_PREG2
-        addd,3 0, 4, \dst ? SCRATCH_PREG3
-        addd,4 0, 4, \dst ? SCRATCH_PREG4
-        addd,5 0, 5, \dst ? SCRATCH_PREG5
-    }
-    {
-        addd,0 0, 6, \dst ? SCRATCH_PREG6
-        addd,1 0, 6, \dst ? SCRATCH_PREG7
-        addd,2 0, 6, \dst ? SCRATCH_PREG8
-    }
-    .endm
-
-    .macro min_version ver
-        isa_version SCRATCH_REG1
-        cmplsb,0 SCRATCH_REG1, \ver, SCRATCH_PREG0
-        ibranch 0f ? ~SCRATCH_PREG0
-        skip_test
-0:
-    .endm
-
-    .macro max_version ver
-        isa_version SCRATCH_REG1
-        cmplesb,0 SCRATCH_REG1, \ver, SCRATCH_PREG0
-        ibranch 0f ? SCRATCH_PREG0
-        skip_test
-0:
-    .endm
-
 #define LSR_LCNT(X)         ((X) & 0xffffffff)
 #define LSR_ECNT(X)         (((X) & 0x1f) << 32)
 #define LSR_VLC             (1 << 37)
