@@ -5,12 +5,9 @@
 # define __iset__ 1
 #endif
 
-#define NR_exit                   1
-#define NR_write                  4
-#define NR_mmap                  90
-#define NR_rt_sigaction         174
-#define NR_rt_sigreturn         173
-#define NR_access_hw_stacks     254
+#define PAGE_SIZE 4096
+
+#include "common/syscall_nr.h"
 
 #define SCRATCH_REG0 %g23
 #define SCRATCH_REG1 %g22
@@ -88,58 +85,6 @@
 
     .macro skip_test
         sys_exit 77
-    .endm
-
-#define PAGE_SIZE 4096
-
-#define MAP_SHARED              0x000001
-#define MAP_PRIVATE             0x000002
-#define MAP_SHARED_VALIDATE     0x000003
-#define MAP_ANONYMOUS           0x000010 /* don't use a file */
-#define MAP_FIXED               0x000100 /* Interpret addr exactly */
-#define MAP_DENYWRITE           0x000800 /* ETXTBSY */
-#define MAP_GROWSDOWN           0x001000 /* stack-like segment */
-#define MAP_GROWSUP             0x002000 /* register stack-like segment */
-#define MAP_EXECUTABLE          0x004000 /* mark it as an executable */
-#define MAP_LOCKED              0x008000 /* pages are locked */
-#define MAP_NORESERVE           0x010000 /* don't check for reservations */
-#define MAP_POPULATE            0x020000 /* populate (prefault) pagetables */
-#define MAP_NONBLOCK            0x040000 /* do not block on IO */
-#define MAP_FIRST32             0x080000 /* in protected mode map in  */
-/* first 2 ** 32 area */
-#define MAP_WRITECOMBINED       0x100000 /* Write combine */
-#define MAP_HUGETLB             0x200000 /* create a huge page mapping */
-#define MAP_FIXED_NOREPLACE     0x400000 /* MAP_FIXED which doesn't unmap */
-/* underlying mapping */
-#define MAP_STACK MAP_GROWSDOWN
-
-#define PROT_READ   0x1     /* page can be read */
-#define PROT_WRITE  0x2     /* page can be written */
-#define PROT_EXEC   0x4     /* page can be executed */
-#define PROT_SEM    0x8     /* page may be used for atomic ops */
-#define PROT_NONE   0x0     /* page can not be accessed */
-
-    .macro sys_mmap ret, addr, len, prot, flags, fd=-1, offset=0
-    {
-        setwd wsz=8, nfx=1
-        setbn rsz=3, rbs=4, rcur=0
-        sdisp %ctpr1, 0x3
-    }
-        addd,0 0, NR_mmap, %b[0]
-    {
-        addd,0 0, \addr, %b[1]
-        addd,1 0, \len, %b[2]
-    }
-    {
-        addd,0 0, \prot, %b[3]
-        addd,1 0, \flags, %b[4]
-    }
-    {
-        addd,0 0, \fd, %b[5]
-        addd,1 0, \offset, %b[6]
-    }
-        call %ctpr1, wbs=4
-        addd,0 0, %b[0], \ret
     .endm
 
 #define write(MSG) \
