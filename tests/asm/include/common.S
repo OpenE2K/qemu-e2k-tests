@@ -5,6 +5,21 @@
 # define __iset__ 1
 #endif
 
+#ifdef MIN_VER
+# define ISET_MIN MIN_VER
+#else
+# define ISET_MIN 1
+#endif
+
+#ifdef MAX_VER
+# define ISET_MAX MAX_VER
+#else
+# define ISET_MAX 99
+#endif
+
+#define IS_ISET(MIN, MAX) (__iset__ >= (MIN) && __iset__ < (MAX))
+#define IS_SKIP !IS_ISET(ISET_MIN, ISET_MAX)
+
 #define PAGE_SIZE 4096
 
 #include "common/syscall_nr.h"

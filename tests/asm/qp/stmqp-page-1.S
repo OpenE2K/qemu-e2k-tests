@@ -1,16 +1,6 @@
 #include "common/mmap.h"
-
 #include "test_start.S"
-
-#ifndef MIN_VER
-# define MIN_VER 5
-#endif
-
-#ifndef MAX_VER
-# define MAX_VER 99
-#endif
-
-#if __iset__ >= MIN_VER && __iset__ < MAX_VER
+#if __iset__ >= 5
         setwd wsz=8, nfx=0
 
         sys_mmap(%r0, 0, PAGE_SIZE * 3, PROT_READ, MAP_PRIVATE | MAP_ANONYMOUS)
@@ -23,8 +13,5 @@
 
         addd,0 %r0, PAGE_SIZE - 8, %g16
         stmqp,2 %r1, %g16, 0x00ff
-#else
-        skip_test
 #endif
-
 #include "test_end.S"
