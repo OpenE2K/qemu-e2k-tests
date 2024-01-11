@@ -1,5 +1,7 @@
 inc_dir = include_directories('include')
 
+subdir('common')
+
 asm_tests = {
   'aau': {
     'staa-1': {},
@@ -234,6 +236,7 @@ foreach suite, tests : asm_tests
     exe_args = {
       'link_args': ['-nostdlib'],
       'include_directories': inc_dir,
+      'link_with': [common_lib],
     }
 
     if 'c_args' in opts

@@ -1,5 +1,5 @@
-#ifndef SRC_BASE_COMMON_H
-#define SRC_BASE_COMMON_H
+#ifndef SRC_COMMON_H
+#define SRC_COMMON_H
 
 #if !defined(__iset__)
 # define __iset__ 1
@@ -383,4 +383,4 @@
         cmpedb,0 0, \scratch, \dst
     .endm
 
-#endif // SRC_BASE_COMMON_H
+#endif // SRC_COMMON_H

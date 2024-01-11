@@ -1,12 +1,11 @@
 #ifndef SRC_BASE_TEST_END_H
 #define SRC_BASE_TEST_END_H
 
-        exit_with_code
-    .size _start, . - _start
-
-    .pushsection ".data"
-exit_code:
-    .byte 0
-    .popsection
+    {
+        return %ctpr3
+        nop 5
+    }
+        ct %ctpr3
+    .size test_entry, . - test_entry
 
 #endif // SRC_BASE_TEST_END_H
