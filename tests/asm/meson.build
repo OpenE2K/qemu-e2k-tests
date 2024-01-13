@@ -70,6 +70,8 @@ asm_tests = {
     'out-of-bounds-2': { 'should_fail': true },
     'out-of-bounds-3': { 'should_fail': true },
     'br-1': {},
+    'same-reg-access-1': {},
+    'same-reg-access-2': {},
   },
   'ct': {
     'ibranch-1': {},
