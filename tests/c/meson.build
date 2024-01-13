@@ -3,6 +3,7 @@ inc_dir = include_directories('include')
 asm_tests = {
   'simple': {
     'hello': {},
+    'create-thread': { 'link_args': ['-lpthread'] },
   },
 }
 
@@ -16,6 +17,10 @@ foreach suite, tests : asm_tests
 
     if 'c_args' in opts
       exe_args += { 'c_args': opts['c_args'] }
+    endif
+
+    if 'link_args' in opts
+      exe_args += { 'link_args': opts['link_args'] }
     endif
 
     test_args = {
