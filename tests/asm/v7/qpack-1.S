@@ -1,5 +1,6 @@
 #include "test_start.S"
 
+#if __iset__ >= 7
         setwd wsz=4, nfx=1
     {
         addd,0 0, 0x0706050403020100, %g16
@@ -47,5 +48,6 @@
         assert_eq_i64(%r1, %r5)
         assert_eq_i64(%r2, %r6)
         assert_eq_i64(%r3, %r7)
+#endif
 
 #include "test_end.S"

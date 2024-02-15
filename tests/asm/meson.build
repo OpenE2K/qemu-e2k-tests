@@ -224,7 +224,7 @@ asm_tests = {
     'stmqp-page-4': { 'src': 'stmqp-page-2', 'c_args': ['-DMIN_VER=6'] },
   },
   'v7': {
-    'qpack-1': {},
+    'qpack-1': {'c_args': ['-DMIN_VER=7']},
   },
 }
 
