@@ -223,6 +223,9 @@ asm_tests = {
     'stmqp-page-3': { 'src': 'stmqp-page-1', 'c_args': ['-DMIN_VER=6'] },
     'stmqp-page-4': { 'src': 'stmqp-page-2', 'c_args': ['-DMIN_VER=6'] },
   },
+  'v7': {
+    'qpack-1': {},
+  },
 }
 
 foreach suite, tests : asm_tests
