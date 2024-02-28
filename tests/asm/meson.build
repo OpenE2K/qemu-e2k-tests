@@ -205,6 +205,7 @@ asm_tests = {
     'invalid-nr-hi-1': {},
     'invalid-arg-1': {},
     'invalid-arg-hi-1': {},
+    'fast-gettimeofday-1': {},
   },
   'f80': {
     'movif-movfi-1': {},
