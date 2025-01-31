@@ -133,6 +133,7 @@ asm_tests = {
     'clp-arg-5': { 'should_fail': true },
     'clp-arg-6': { 'should_fail': true },
     'clp-arg-7': { 'should_fail': true },
+    'movtd-ctpr-cond-1': { 'should_fail': true },
   },
   'int': {
     'basic-1': {},
