@@ -21,11 +21,11 @@
 
 aau:
     {
-        fapb ct=1, dcd=0, fmt=FMT, mrng=8, d=0, incr=0, ind=0, asz=1, abs=0, disp=0
+        fapb ct=1, dcd=0, fmt=FMT, mrng=0, d=0, incr=0, ind=0, asz=1, abs=0, disp=0
     }
 
     .section ".rodata"
-    .balign 2
+    .balign 16
     .byte 0
 arr:
-    .quad 0
+    .fill 64, 1, 0

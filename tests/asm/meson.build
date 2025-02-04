@@ -39,6 +39,7 @@ asm_tests = {
     'movaw-unaligned-2': { 'src': 'mova-unaligned', 'c_args': ['-DOP=movaw', '-DFMT=3', '-DMIN_VER=5'] },
     'movad-unaligned-1': { 'src': 'mova-unaligned', 'c_args': ['-DOP=movad', '-DFMT=4', '-DMAX_VER=4'], 'should_fail': true },
     'movad-unaligned-2': { 'src': 'mova-unaligned', 'c_args': ['-DOP=movad', '-DFMT=4', '-DMIN_VER=5'] },
+    'movaqp-unaligned-1': { 'src': 'mova-unaligned', 'c_args': ['-DOP=movaqp', '-DFMT=5', '-DMIN_VER=5'] },
   },
   'base': {
     'same-reg-output-1': {},
