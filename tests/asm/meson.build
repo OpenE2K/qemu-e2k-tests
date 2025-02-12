@@ -87,6 +87,7 @@ asm_tests = {
     'ret-reset-ctpr-1': { 'should_fail': true },
     'ret-reset-ctpr-2': { 'should_fail': true },
     'ret-reset-ctpr-3': { 'should_fail': true },
+    'movtd-invalidate-ctpr-1': {},
   },
   'decode': {
     'ales25-1': {},
